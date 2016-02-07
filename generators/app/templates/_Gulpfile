@@ -1,0 +1,158 @@
+'use strict';
+
+var path = {
+    src: './src',
+    dest: './dist'
+};
+///////////////////////////////////////////
+///            Gulp Modules             ///
+///////////////////////////////////////////
+
+var gulp              = require('gulp'),<% if (sass == 'sass') { %>
+    sass              = require('gulp-sass'),<% } else if (sass == 'compass') { %>
+    compass           = require('gulp-compass'),<% } %>
+    cssmin            = require('gulp-cssmin'),<% if (autoprefixer) { %>
+    autoprefixer      = require('gulp-autoprefixer'),<% }  if (coffee) { %>
+    coffee            = require('gulp-coffee'),<% } %>
+    uglify            = require('gulp-uglify'),
+    sourcemaps        = require('gulp-sourcemaps'),
+    newer             = require('gulp-newer'),
+    rename            = require('gulp-rename'),
+    plumber           = require('gulp-plumber'),
+    concat            = require('gulp-concat'),
+    watch             = require('gulp-watch'),
+    batch             = require('gulp-batch'),
+    imageOptimization = require('gulp-image-optimization'),
+    runSequense       = require('run-sequence'),
+    browserSync       = require('browser-sync');
+
+
+///////////////////////////////////////////
+///            Compass Task             ///
+///////////////////////////////////////////
+
+gulp.task('sass', function() {
+    return gulp.src(path.src + '/scss/**/*.scss')
+        .pipe(plumber())
+        .pipe(newer(path.dest + '/css'))<% if (sass == 'sass') { %>
+        .pipe(sass())<% } else if (sass == 'compass') { %>
+        .pipe(compass({
+            config_file: './config.rb',
+            css: path.dest + '/css/',
+            sass: path.src + '/scss'
+        }))<% }  if (autoprefixer) { %>
+        .pipe(autoprefixer('last 2 versions'))<% } %>
+        .pipe(gulp.dest(path.dest + '/css'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('cssmin', ['sass'], function() {
+    return gulp.src([path.dest + '/css/*.css', '!' + path.dest + '/css/*.min.css'])
+        .pipe(plumber())
+        .pipe(cssmin())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(path.dest + '/css'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+
+///////////////////////////////////////////
+///           Javascript Task           ///
+///////////////////////////////////////////
+
+<% if (coffee) { %>
+gulp.task('coffee', function() {
+    return gulp.src([path.src + '/coffee/**/*.coffee'])
+        .pipe(plumber())
+        .pipe(newer(path.dest + '/js'))
+        .pipe(sourcemaps.init())
+        .pipe(concat('scripts.coffee'))
+        .pipe(coffee())
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(path.dest + '/js'));
+});
+<% } %>
+
+gulp.task('javascript', <% if (coffee) { %>['coffee']<% } %>, function() {
+    return gulp.src(<% if (coffee) { %>path.dest<% } else { %>path.src<% } %> + '/js/**/*.js')
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('scripts.js'))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(path.dest + '/js'));
+});
+
+gulp.task('uglify', ['javascript'], function() {
+    return gulp.src([path.dest + '/js/*.js', '!' + path.dest + '/js/*.min.js'])
+        .pipe(plumber())
+        .pipe(uglify())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(path.dest + '/js'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+
+
+///////////////////////////////////////////
+///           Image optimize            ///
+///////////////////////////////////////////
+
+gulp.task('images', function () {
+    gulp.src([
+            path.src + '/images/**/*.jpg',
+            path.src + '/images/**/*.jpeg',
+            path.src + '/images/**/*.png',
+            path.src + '/images/**/*.ico']
+        )
+        .pipe(plumber())
+        .pipe(newer(path.dest + '/img'))
+        .pipe(imageOptimization({
+            optimizationLevel: 5,
+            progressive: true,
+            interlaced: true
+        }))
+        .pipe(gulp.dest(path.dest + '/img'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+
+///////////////////////////////////////////
+///            Browser Sync             ///
+///////////////////////////////////////////
+
+gulp.task('browserSync', function() {
+    browserSync({
+        server: {
+            baseDir: path.dest
+        }
+    });
+});
+
+
+///////////////////////////////////////////
+///              Watch Task             ///
+///////////////////////////////////////////
+
+gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
+    gulp.watch([path.dest + '/scss/**/*.scss'], ['cssmin']);
+    <% if (coffee) { %>gulp.watch([path.dest + '/coffee/**/*.coffee'], ['uglify']);<% } %>
+
+    gulp.watch(path.dest + '/**/*.html', browserSync.reload);
+});
+
+
+///////////////////////////////////////////
+///            Default Task             ///
+///////////////////////////////////////////
+
+gulp.task('default', function (callback) {
+    runSequense(['cssmin', 'uglify', 'images', 'browserSync', 'watch'], callback);
+});

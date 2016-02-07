@@ -1,0 +1,37 @@
+{
+  "name": "<%= appName %>",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "authors": [
+    ""
+  ],
+  "license": "",
+  "keywords": [],
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {<% if (framework == 'bootstrap4') { %>
+    "bootstrap": "^4",
+    "tether": "~1.1.1",<% } else if (framework == 'bootstrap3') { %>
+    "sass-bootstrap": "~3.0.0",<% } else if (framework == 'foundation5') { %>
+    "foundation": "~5.0.3",<% } else if (framework == 'foundation6') { %>
+    "foundation": "~6.0.0",<% } else if (framework == 'flatui') { %>
+    "flatui": "*",<% } else if (framework == 'materialize') { %>
+    "Materialize": "materialize#^0.97.5",<% } else if (framework == 'materialui') { %>
+    "material-ui": "^0.14.4",<% } else if (modernizer) { %>
+    "modernizer": "^2.8.2",<% } %>
+    "jquery": "~1.10.2"
+  },
+  "devDependencies": {
+    "Ionicons": "ionicons#~2.0.1",
+    "font-awesome": "fontawesome#~4.5.0"
+  }
+}
