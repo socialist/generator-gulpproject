@@ -21,6 +21,10 @@ module.exports = yeoman.generators.Base.extend({
         default: this.appname
       },
       {
+        name: 'description',
+        message: 'Краткое описание проекта'
+      },
+      {
         type: 'list',
         name: 'framework',
         message: 'Какой фреймворк будем использовать?',
@@ -109,6 +113,7 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       this.appName = props.appName;
+      this.description = props.description;
       this.framework = props.framework;
       this.sass = props.sass;
       this.modernizer = hasFeature('modernizer');
@@ -161,6 +166,9 @@ module.exports = yeoman.generators.Base.extend({
     this.write('src/scss/main.scss', '@import "variables";\n@import "mixins";\n\n');
     this.write('src/scss/_variables.scss', '');
     this.write('src/scss/_mixins.scss', '');
+    if (this.coffee) {
+      this.write('src/coffee/app.coffee', '');
+    }
   },
 
   install: function () {

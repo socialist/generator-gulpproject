@@ -1,6 +1,6 @@
 {
   "name": "generator-gulpproject",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Генератор для собственных нужд",
   "homepage": "",
   "author": {
@@ -21,15 +21,16 @@
     "yosay": "^1.0.2"
   },
   "devDependencies": {
-    "yeoman-assert": "^2.0.0",
+    "eslint-config-tschaub": "^2.0.0",
     "eslint-config-xo-space": "^0.8.0",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.0.0",
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.0.0",
+    "gulp-nsp": "^2.1.0",
     "gulp-plumber": "^1.0.0",
-    "gulp-nsp": "^2.1.0"
+    "yeoman-assert": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "xo-space",
