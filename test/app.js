@@ -1,7 +1,7 @@
 'use strict';
 var path = require('path');
 var assert = require('yeoman-assert');
-var helpers = require('yeoman-generator').test;
+var helpers = require('yeoman-test');
 
 describe('generator-gulpproject:app', function () {
   before(function (done) {
@@ -32,5 +32,9 @@ describe('generator-gulpproject:app', function () {
       'package.json',
       'bower.json'
     ]);
+  });
+
+  it('write to main.scss', function () {
+    assert.fileContent('src/scss/main.scss', '@import "variables";\n@import "mixins";\n\n');
   });
 });
