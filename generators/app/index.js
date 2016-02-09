@@ -147,14 +147,14 @@ module.exports = yeoman.Base.extend({
       mkdirp('src/templates/includes', callback);
       mkdirp('src/templates/includes/mixins', callback);
 
-      this.write('src/tesmplates/includes/mixins/_mixins.jade', '');
-      this.write('src/tesmplates/includes/_head.jade',
+      this.write('src/templates/includes/mixins/_mixins.jade', '');
+      this.write('src/templates/includes/_head.jade',
         'doctype html\nhtml\n\thead\n\t\t' +
         'meta(charset="utf-8")\n\t\t' +
         'meta(name="viewport", content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no)\n\t\t' +
         'title Title\n\tbody\n\t\th1 Header');
-      this.write('src/tesmplates/includes/_footer.jade', '');
-      this.write('src/tesmplates/index.jade', 'include ./includes/_header');
+      this.write('src/templates/includes/_footer.jade', '');
+      this.write('src/templates/index.jade', 'include ./includes/_header');
     }
 
     if (this.coffee === true) {
