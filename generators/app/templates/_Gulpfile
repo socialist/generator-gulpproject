@@ -10,7 +10,10 @@ var path = {
 
 var gulp              = require('gulp'),<% if (sass == 'sass') { %>
     sass              = require('gulp-sass'),<% } else if (sass == 'compass') { %>
-    compass           = require('gulp-compass'),<% } %>
+    compass           = require('gulp-compass'),<% } if (jade) { %>
+    jade              = require('gulp-jade'),
+    data              = require('gulp-data'),
+    pathfs            = require('path'),<% } %>
     cssmin            = require('gulp-cssmin'),<% if (autoprefixer) { %>
     autoprefixer      = require('gulp-autoprefixer'),<% }  if (coffee) { %>
     coffee            = require('gulp-coffee'),<% } %>
@@ -25,6 +28,45 @@ var gulp              = require('gulp'),<% if (sass == 'sass') { %>
     imageOptimization = require('gulp-image-optimization'),
     runSequense       = require('run-sequence'),
     browserSync       = require('browser-sync');
+
+
+<% if (jade) { %>
+
+///////////////////////////////////////////
+///                  HTML               ///
+///////////////////////////////////////////
+
+gulp.task('html', function () {
+  return gulp.src([
+      path.src + '/templates/**/*.jade',
+      '!' + path.src + '/templates/inclides/**/*.jade'
+    ])
+    .pipe(plumber())
+    .pipe(newer(path.dest + '/**/*.html'))
+    .pipe(data(function (file) {
+      var filePath, fileData;
+
+      filePath = pathfs.basename(file.path, '.jade');
+
+      if (/^_[\w]/.test(filePath)) {
+        return;
+      }
+
+      fileData = require(path.src + '/data/' + filePath + '.json');
+
+      if (fileData) {
+        return fileData;
+      }
+    }))
+    .pipe(jade({
+      pretty: true
+    }))
+    .pipe(gulp.dest(path.dest))
+    .pipe(browserSync.reload({
+      stream: true
+    }));
+});
+<% } %>
 
 
 ///////////////////////////////////////////
@@ -144,8 +186,12 @@ gulp.task('browserSync', function() {
 gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
     gulp.watch([path.dest + '/scss/**/*.scss'], ['cssmin']);
     <% if (coffee) { %>gulp.watch([path.dest + '/coffee/**/*.coffee'], ['uglify']);<% } %>
-
-    gulp.watch(path.dest + '/**/*.html', browserSync.reload);
+    <% if (jade) { %>
+    gulp.watch([
+          path.src + '/templates/**/*.jade',
+          path.src + '/data/**/*.json'
+        ], ['html']);<% } else {%>
+    gulp.watch(path.dest + '/**/*.html', browserSync.reload);<% } %>
 });
 
 
@@ -154,5 +200,5 @@ gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
 ///////////////////////////////////////////
 
 gulp.task('default', function (callback) {
-    runSequense(['cssmin', 'uglify', 'images', 'browserSync', 'watch'], callback);
+    runSequense(['cssmin', 'uglify', 'images',<% if (jade) { %><% } %> 'browserSync', 'watch'], callback);
 });

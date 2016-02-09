@@ -101,6 +101,12 @@ module.exports = yeoman.Base.extend({
         name: 'coffee',
         message: 'Будем использовать CoffeeScript?',
         default: true
+      },
+      {
+        type: 'confirm',
+        name: 'jade',
+        message: 'Будем использовать JADE?',
+        default: true
       }
     ];
 
@@ -119,6 +125,7 @@ module.exports = yeoman.Base.extend({
       this.modernizer = hasFeature('modernizer');
       this.autoprefixer = hasFeature('autoprefixer');
       this.coffee = props.coffee;
+      this.jade = props.jade;
 
       done();
     }.bind(this));
@@ -131,7 +138,24 @@ module.exports = yeoman.Base.extend({
 
     mkdirp('src', callback);
     mkdirp('src/scss', callback);
+    mkdirp('src/scss/variables', callback);
+    mkdirp('src/scss/mixins', callback);
     mkdirp('src/images', callback);
+
+    if (this.jade) {
+      mkdirp('src/templates', callback);
+      mkdirp('src/templates/includes', callback);
+      mkdirp('src/templates/includes/mixins', callback);
+
+      this.write('src/tesmplates/includes/mixins/_mixins.jade', '');
+      this.write('src/tesmplates/includes/_head.jade',
+        'doctype html\nhtml\n\thead\n\t\t' +
+        'meta(charset="utf-8")\n\t\t' +
+        'meta(name="viewport", content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no)\n\t\t' +
+        'title Title\n\tbody\n\t\th1 Header');
+      this.write('src/tesmplates/includes/_footer.jade', '');
+      this.write('src/tesmplates/index.jade', 'include ./includes/_header');
+    }
 
     if (this.coffee === true) {
       mkdirp('src/coffee', callback);
@@ -140,6 +164,16 @@ module.exports = yeoman.Base.extend({
     this.fs.copy(
         this.templatePath('_.bowerrc'),
         this.destinationPath('.bowerrc')
+    );
+
+    this.fs.copy(
+      this.templatePath('_.eslintrc'),
+      this.destinationPath('.eslintrc')
+    );
+
+    this.fs.copy(
+      this.templatePath('_.jscsrc'),
+      this.destinationPath('.jscsrc')
     );
 
     this.fs.copy(
