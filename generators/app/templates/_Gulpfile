@@ -200,5 +200,5 @@ gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
 ///////////////////////////////////////////
 
 gulp.task('default', function (callback) {
-    runSequense(['cssmin', 'uglify', 'images',<% if (jade) { %><% } %> 'browserSync', 'watch'], callback);
+    runSequense(['cssmin', 'uglify', 'images',<% if (jade) { %>'html',<% } %> 'browserSync', 'watch'], callback);
 });
