@@ -39,7 +39,7 @@ var gulp              = require('gulp'),<% if (sass == 'sass') { %>
 gulp.task('html', function () {
   return gulp.src([
       path.src + '/templates/**/*.jade',
-      '!' + path.src + '/templates/inclides/**/*.jade'
+      '!' + path.src + '/templates/inclides/**'
     ])
     .pipe(plumber())
     .pipe(newer(path.dest + '/**/*.html'))

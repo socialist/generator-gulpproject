@@ -154,7 +154,7 @@ module.exports = yeoman.Base.extend({
         'meta(name="viewport", content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no)\n\t\t' +
         'title Title\n\tbody\n\t\th1 Header');
       this.write('src/templates/includes/_footer.jade', '');
-      this.write('src/templates/index.jade', 'include ./includes/_header');
+      this.write('src/templates/index.jade', 'include ./includes/_head');
     }
 
     if (this.coffee === true) {
