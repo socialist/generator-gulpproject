@@ -84,7 +84,7 @@ gulp.task('sass', function() {
       sass: path.src + '/scss'<% if (framework == 'susy') { %>,
       require: [
         'susy'
-      ],<% } %>
+      ]<% } %>
     }))<% }  if (autoprefixer) { %>
     .pipe(autoprefixer('last 2 versions'))<% } %>
     .pipe(gulp.dest(path.dest + '/css'))
@@ -191,8 +191,8 @@ gulp.task('browserSync', function() {
 ///////////////////////////////////////////
 
 gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
-  gulp.watch([path.dest + '/scss/**/*.scss'], ['cssmin']);
-  <% if (coffee) { %>gulp.watch([path.dest + '/coffee/**/*.coffee'], ['uglify']);<% } %>
+  gulp.watch([path.src + '/scss/**/*.scss'], ['cssmin']);
+  <% if (coffee) { %>gulp.watch([path.src + '/coffee/**/*.coffee'], ['uglify']);<% } %>
   <% if (jade) { %>
   gulp.watch([
       path.src + '/templates/**/*.jade',

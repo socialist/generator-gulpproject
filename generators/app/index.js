@@ -150,15 +150,17 @@ module.exports = yeoman.Base.extend({
       mkdirp('src/templates', callback);
       mkdirp('src/templates/includes', callback);
       mkdirp('src/templates/includes/mixins', callback);
+      mkdirp('src/data', callback);
 
       this.write('src/templates/includes/mixins/_mixins.jade', '');
       this.write('src/templates/includes/_head.jade',
         'doctype html\nhtml\n\thead\n\t\t' +
         'meta(charset="utf-8")\n\t\t' +
         'meta(name="viewport", content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no)\n\t\t' +
-        'title Title\n\tbody\n\t\th1 Header');
+        'title=title\n\t\tlink(rel="stylesheet", href="/css/main.css")');
       this.write('src/templates/includes/_footer.jade', '');
-      this.write('src/templates/index.jade', 'include ./includes/_head');
+      this.write('src/templates/index.jade', 'include ./includes/_head\nbody\n\th1=header');
+      this.write('src/data/index.json', '{\n\t"title": "First awesome step",\n\t"header": "First awesome step"\n}');
     }
 
     if (this.coffee === true) {
