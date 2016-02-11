@@ -58,6 +58,10 @@ module.exports = yeoman.Base.extend({
             value: 'materialui'
           },
           {
+            name: 'Susy',
+            value: 'susy'
+          },
+          {
             name: 'Не использовать фреймворки',
             value: 'none'
           }
@@ -191,6 +195,13 @@ module.exports = yeoman.Base.extend({
           this.templatePath('_config.rb'),
           this.destinationPath('config.rb')
       );
+
+      if (this.framework === 'susy') {
+        this.fs.copy(
+          this.templatePath('sass/_susy_grid.scss'),
+          this.destinationPath('src/scss/_grid.scss')
+        );
+      }
     }
 
     this.template('_Gulpfile', 'Gulpfile.js');
