@@ -1,0 +1,6 @@
+//Add icons Font styles
+@mixin icon-fonts($icons-symbols, $vendor) {
+  @each $name, $symbol in $icons-symbols {
+    .#{$vendor}-#{$name} { &:before { content: $symbol; } }
+  }
+}

@@ -39,7 +39,7 @@ var gulp              = require('gulp'),<% if (sass == 'sass') { %>
 gulp.task('html', function () {
   return gulp.src([
       path.src + '/templates/**/*.jade',
-      '!' + path.src + '/templates/inclides/**/*.jade'
+      '!' + path.src + '/templates/includes/**/*.jade'
     ])
     .pipe(plumber())
     .pipe(newer(path.dest + '/**/*.html'))
@@ -172,6 +172,20 @@ gulp.task('images', function () {
     }));
 });
 
+<% if (fa || ion) { %>
+///////////////////////////////////////////
+///              Copy Fonts             ///
+///////////////////////////////////////////
+
+gulp.task('copy:fonts', function () {
+  gulp.src([
+    './vendor/font-awesome/fonts/*',
+    './vendor/Ionicons/fonts/*'
+  ])
+  .pipe(newer(path.dest + '/fonts'))
+  .pipe(gulp.dest(path.dest + '/fonts'));
+});
+<% } %>
 
 ///////////////////////////////////////////
 ///            Browser Sync             ///
@@ -207,7 +221,8 @@ gulp.task('watch', ['browserSync', 'cssmin', 'uglify'], function() {
 ///////////////////////////////////////////
 
 gulp.task('default', function (callback) {
-  runSequense([
+  runSequense([<% if (fa || ion) { %>
+    'copy:fonts',<% } %>
     'cssmin',
     'uglify',
     'images',<% if (jade) { %>

@@ -27,11 +27,11 @@
     "flatui": "*",<% } else if (framework == 'materialize') { %>
     "Materialize": "materialize#^0.97.5",<% } else if (framework == 'materialui') { %>
     "material-ui": "^0.14.4",<% } else if (modernizer) { %>
-    "modernizer": "^2.8.2",<% } %>
+    "modernizer": "^2.8.2",<% } if (ion) { %>
+    "Ionicons": "ionicons#~2.0.1",<% } if (fa) { %>
+    "font-awesome": "fontawesome#~4.5.0",<% } %>
     "jquery": "~1.10.2"
   },
   "devDependencies": {
-    "Ionicons": "ionicons#~2.0.1",
-    "font-awesome": "fontawesome#~4.5.0"
   }
 }

@@ -69,6 +69,22 @@ module.exports = yeoman.Base.extend({
         default: 0
       },
       {
+        type: 'checkbox',
+        name: 'iconfont',
+        message: 'Будем использовать какие-то иконки?',
+        choices: [
+          {
+            name: 'Font Awesome',
+            value: 'fa'
+          },
+          {
+            name: 'Ion Icons',
+            value: 'ion'
+          }
+        ],
+        default: []
+      },
+      {
         type: 'list',
         name: 'sass',
         message: 'Какой css-препроцессор будем использовать?',
@@ -122,23 +138,38 @@ module.exports = yeoman.Base.extend({
         return props.features.indexOf(feat) !== -1;
       }
 
+      function hasFont(feat) {
+        return props.iconfont.indexOf(feat) !== -1;
+      }
+
       this.appName = props.appName;
       this.description = props.description;
       this.framework = props.framework;
       this.sass = props.sass;
       this.modernizer = hasFeature('modernizer');
       this.autoprefixer = hasFeature('autoprefixer');
+      this.fa = hasFont('fa');
+      this.ion = hasFont('ion');
       this.coffee = props.coffee;
       this.jade = props.jade;
+
+      console.log(this);
 
       done();
     }.bind(this));
   },
 
   writing: function () {
-    var callback = function (err) {
+    var callback, copyMixin, scssMixins = '', scssVariables = '', scssIncludes, _this = this;
+    callback = function (err) {
       return err;
     };
+    copyMixin = function () {
+      _this.fs.copy(
+        _this.templatePath('sass/mixins/_icon-fonts.scss'),
+        _this.destinationPath('src/scss/mixins/_icon-fonts.scss')
+      );
+    }
 
     mkdirp('src', callback);
     mkdirp('src/scss', callback);
@@ -161,6 +192,32 @@ module.exports = yeoman.Base.extend({
       this.write('src/templates/includes/_footer.jade', '');
       this.write('src/templates/index.jade', 'include ./includes/_head\nbody\n\th1=header');
       this.write('src/data/index.json', '{\n\t"title": "First awesome step",\n\t"header": "First awesome step"\n}');
+    }
+
+    // Fonts
+    if (this.fa === true) {
+      copyMixin();
+
+      this.fs.copy(
+        this.templatePath('sass/variables/_font-awesome.scss'),
+        this.destinationPath('src/scss/variables/_font-awesome.scss')
+      );
+      this.fs.copy(
+        this.templatePath('sass/_font-awesome.scss'),
+        this.destinationPath('src/scss/_font-awesome.scss')
+      );
+    }
+    if (this.ion === true) {
+      copyMixin();
+
+      this.fs.copy(
+        this.templatePath('sass/variables/_ionicons.scss'),
+        this.destinationPath('src/scss/variables/_ionicons.scss')
+      );
+      this.fs.copy(
+        this.templatePath('sass/_ionicons.scss'),
+        this.destinationPath('src/scss/_ionicons.scss')
+      );
     }
 
     if (this.coffee === true) {
@@ -210,9 +267,25 @@ module.exports = yeoman.Base.extend({
     this.template('_package.json', 'package.json');
     this.template('_bower.json', 'bower.json');
 
-    this.write('src/scss/main.scss', '@import "variables";\n@import "mixins";\n\n');
-    this.write('src/scss/_variables.scss', '');
-    this.write('src/scss/_mixins.scss', '');
+    // SCSS Files
+    scssIncludes = '@import "variables";\n@import "mixins";\n\n';
+    if (this.framework === 'susy') {
+      scssIncludes += '@import "grid";\n\n';
+    }
+    if (this.fa === true || this.ion === true) {
+      scssMixins += '@import "mixins/icon-fonts";\n';
+    }
+    if (this.fa === true) {
+      scssIncludes += '@import "font-awesome";\n';
+      scssVariables += '@import "variables/font-awesome";\n';
+    }
+    if (this.ion === true) {
+      scssIncludes += '@import "ionicons";\n';
+      scssVariables += '@import "variables/ionicons";\n';
+    }
+    this.write('src/scss/main.scss', scssIncludes);
+    this.write('src/scss/_variables.scss', scssVariables);
+    this.write('src/scss/_mixins.scss', scssMixins);
     if (this.coffee) {
       this.write('src/coffee/app.coffee', '');
     }

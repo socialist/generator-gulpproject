@@ -1,0 +1,24 @@
+@import "compass/css3/font-face";
+
+@include font-face('Ion Icons',
+  font-files('/fonts/ionicons.woff',
+    '/fonts/ionicons.ttf',
+    '/fonts/ionicons.svg'),
+  '/fonts/ionicons.eot');
+
+.ion {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Ion Icons';
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@include icon-fonts($ion-icon-symbols, 'ion');
