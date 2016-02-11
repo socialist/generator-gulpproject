@@ -85,7 +85,7 @@ gulp.task('sass', function() {
     .pipe(compass({
       config_file: './config.rb',
       css: path.dest + '/css/',
-      sass: path.src + '/scss'<% if (framework == 'susy') %>,
+      sass: path.src + '/scss'<% if (framework == 'susy') { %>,
       require: [
         'susy'
       ],<% } %>
