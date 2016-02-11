@@ -128,7 +128,7 @@ gulp.task('coffee', function() {
 });
 <% } %>
 
-gulp.task('javascript', <% if (coffee) { %>['coffee']<% } %>, function() {
+gulp.task('javascript', <% if (coffee) { %>['coffee'],<% } %> function() {
   return gulp.src(<% if (coffee) { %>path.dest<% } else { %>path.src<% } %> + '/js/**/*.js')
     .pipe(plumber())
     .pipe(sourcemaps.init())
