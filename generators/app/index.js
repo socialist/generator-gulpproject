@@ -153,23 +153,24 @@ module.exports = yeoman.Base.extend({
       this.coffee = props.coffee;
       this.jade = props.jade;
 
-      console.log(this);
-
       done();
     }.bind(this));
   },
 
   writing: function () {
-    var callback, copyMixin, scssMixins = '', scssVariables = '', scssIncludes, _this = this;
-    callback = function (err) {
+    var scssMixins = '';
+    var scssVariables = '';
+    var scssIncludes;
+    var _this = this;
+    var callback = function (err) {
       return err;
     };
-    copyMixin = function () {
+    var copyMixin = function () {
       _this.fs.copy(
         _this.templatePath('sass/mixins/_icon-fonts.scss'),
         _this.destinationPath('src/scss/mixins/_icon-fonts.scss')
       );
-    }
+    };
 
     mkdirp('src', callback);
     mkdirp('src/scss', callback);
