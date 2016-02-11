@@ -1,0 +1,23 @@
+@import "susy";
+@import "breakpoint";
+
+$susy: (
+  columns: 12,
+  gutters: 1/4,
+  container: 100%,
+  math: fluid,
+  output: float,
+  gutter-position: inside,
+
+  // Закомментировать если не нужно
+  debug: (
+    image: show,
+    color: rgba(#66f, .8),
+    output: overlay,
+    toggle: top right,
+  )
+);
+
+*::after, *::before, * {
+  box-sizing: border-box;
+}
